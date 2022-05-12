@@ -1,7 +1,59 @@
 ﻿
+abstract class Transaction
+{
+    public abstract void Execute();
+
+}
+
+class BuyTransaction : Transaction
+{
+    public User User { get; set; }
+    public Product Product { get; set; }
+    public override void Execute()
+    {
+        User.Balance -= Product.Price;
+    }
+}
+
+class InsertcashTransaction : Transaction
+{
+    public User User { get; set; }
+    public decimal Amount { get; set; }
+    public override void Execute()
+    {
+        User.Balance += Amount;
+    }
+}
+
 
 class App
 {
+    List<Transaction> Transactions = new List<Transaction>();
+
+    void ExecuteTransaction (Transaction t)
+    {
+        t.Execute();
+        LogTransaction("TRansaktion udført: "+ t.GetType().Name);
+    }
+
+    private void LogTransaction(string v)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void BuyProduct(int userindex, Product o)
+    {
+        BuyTransaction t = new BuyTransaction { User = users[userindex], Product = o };
+        ExecuteTransaction (t);
+    }
+
+    public void AddCash(int userindex, decimal amount)
+    {
+        InsertcashTransaction it = new InsertcashTransaction { User = users[userindex], Amount = amount };
+        ExecuteTransaction(it);
+    }
+
+
     public App(UI ui)
     {
         Ui = ui;
